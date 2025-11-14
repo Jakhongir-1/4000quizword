@@ -3,1288 +3,1218 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vocabulary Quest</title>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
+    <title>MASH'AL Learning Center - Essential Words Test</title>
+    <script
+      crossorigin
+      src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"
+    ></script>
+    <script
+      crossorigin
+      src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"
+    ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
       * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
       }
-
-      :root {
-        --primary: #6c63ff;
-        --secondary: #ff6584;
-        --accent: #4ecdc4;
-        --dark: #2c2c54;
-        --light: #f7f7f7;
-        --success: #2ecc71;
-        --warning: #f39c12;
-        --danger: #e74c3c;
-      }
-
       body {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        min-height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 20px;
-        overflow-x: hidden;
-      }
-
-      .container {
-        width: 100%;
-        max-width: 1000px;
-        background: rgba(255, 255, 255, 0.95);
-        border-radius: 20px;
-        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
-        overflow: hidden;
-        position: relative;
-      }
-
-      /* Header Styles */
-      header {
-        background: linear-gradient(to right, var(--primary), var(--secondary));
-        color: white;
-        padding: 25px;
-        text-align: center;
-        position: relative;
-        overflow: hidden;
-      }
-
-      header::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" opacity="0.1"><path d="M20,20 L80,20 L80,80 L20,80 Z" fill="white" stroke="white" stroke-width="2"/></svg>');
-        background-size: 50px;
-      }
-
-      h1 {
-        font-size: 2.8rem;
-        margin-bottom: 10px;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-        position: relative;
-      }
-
-      .subtitle {
-        font-size: 1.2rem;
-        opacity: 0.9;
-        position: relative;
-      }
-
-      /* Stats Bar */
-      .stats-bar {
-        display: flex;
-        justify-content: space-between;
-        padding: 15px 25px;
-        background: var(--dark);
-        color: white;
-        font-weight: 600;
-      }
-
-      .stat-item {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
-
-      /* Progress Bar */
-      .progress-container {
-        height: 12px;
-        background: #e0e0e0;
-        border-radius: 10px;
-        margin: 0 25px 25px;
-        overflow: hidden;
-        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
-      }
-
-      .progress-bar {
-        height: 100%;
-        background: linear-gradient(to right, var(--accent), var(--primary));
-        border-radius: 10px;
-        width: 0%;
-        transition: width 0.5s ease;
-        position: relative;
-        overflow: hidden;
-      }
-
-      .progress-bar::after {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        right: 0;
-        background: linear-gradient(
-          90deg,
-          transparent,
-          rgba(255, 255, 255, 0.4),
-          transparent
-        );
-        animation: shimmer 2s infinite;
-      }
-
-      @keyframes shimmer {
-        0% {
-          transform: translateX(-100%);
-        }
-        100% {
-          transform: translateX(100%);
-        }
-      }
-
-      /* Quiz Container */
-      .quiz-container {
-        padding: 30px;
-        display: block;
-      }
-
-      .question-container {
-        background: white;
-        border-radius: 15px;
-        padding: 25px;
-        margin-bottom: 25px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-        border-left: 5px solid var(--primary);
-        animation: fadeIn 0.5s ease;
-      }
-
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: translateY(20px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-
-      .question-number {
-        font-size: 1rem;
-        color: var(--dark);
-        margin-bottom: 10px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
-
-      .question {
-        font-size: 1.6rem;
-        font-weight: 700;
-        color: var(--dark);
-        margin-bottom: 5px;
-      }
-
-      .hint {
-        font-size: 1rem;
-        color: var(--primary);
-        margin-bottom: 20px;
-        font-style: italic;
-      }
-
-      .options-container {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 15px;
-        margin-bottom: 30px;
-      }
-
-      @media (max-width: 768px) {
-        .options-container {
-          grid-template-columns: 1fr;
-        }
-      }
-
-      .option {
-        background: white;
-        border: 2px solid #e0e0e0;
-        border-radius: 12px;
-        padding: 18px 20px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        font-size: 1.1rem;
-        font-weight: 500;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        position: relative;
-        overflow: hidden;
-      }
-
-      .option:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 7px 15px rgba(0, 0, 0, 0.1);
-        border-color: var(--primary);
-      }
-
-      .option.selected {
-        background: rgba(108, 99, 255, 0.1);
-        border-color: var(--primary);
-        color: var(--primary);
-      }
-
-      .option.correct {
-        background: rgba(46, 204, 113, 0.15);
-        border-color: var(--success);
-        color: var(--success);
-      }
-
-      .option.incorrect {
-        background: rgba(231, 76, 60, 0.15);
-        border-color: var(--danger);
-        color: var(--danger);
-      }
-
-      .option-icon {
-        font-size: 1.2rem;
-        width: 24px;
-        text-align: center;
-      }
-
-      .navigation {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-
-      button {
-        background: linear-gradient(to right, var(--primary), var(--secondary));
-        color: white;
-        border: none;
-        border-radius: 50px;
-        padding: 14px 30px;
-        font-size: 1rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        box-shadow: 0 5px 15px rgba(108, 99, 255, 0.4);
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
-
-      button:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 20px rgba(108, 99, 255, 0.6);
-      }
-
-      button:active {
-        transform: translateY(-1px);
-      }
-
-      button:disabled {
-        background: #cccccc;
-        cursor: not-allowed;
-        transform: none;
-        box-shadow: none;
-      }
-
-      .btn-outline {
-        background: white;
-        color: var(--primary);
-        border: 2px solid var(--primary);
-      }
-
-      .btn-outline:hover {
-        background: var(--primary);
-        color: white;
-      }
-
-      /* Score Container */
-      .score-container {
-        padding: 40px;
-        text-align: center;
-        display: none;
-      }
-
-      .score-card {
-        background: white;
-        border-radius: 20px;
-        padding: 40px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        max-width: 600px;
-        margin: 0 auto;
-        position: relative;
-        overflow: hidden;
-      }
-
-      .score-card::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 8px;
-        background: linear-gradient(to right, var(--primary), var(--secondary));
-      }
-
-      .trophy {
-        font-size: 4rem;
-        color: var(--warning);
-        margin-bottom: 20px;
-        animation: bounce 2s infinite;
-      }
-
-      @keyframes bounce {
-        0%,
-        100% {
-          transform: translateY(0);
-        }
-        50% {
-          transform: translateY(-10px);
-        }
-      }
-
-      .score-title {
-        font-size: 2.2rem;
-        color: var(--dark);
-        margin-bottom: 10px;
-      }
-
-      .score-value {
-        font-size: 4.5rem;
-        font-weight: 800;
-        background: linear-gradient(to right, var(--primary), var(--secondary));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin-bottom: 20px;
-      }
-
-      .score-message {
-        font-size: 1.3rem;
-        color: #666;
-        margin-bottom: 30px;
-        line-height: 1.6;
-      }
-
-      .results-container {
-        margin-top: 30px;
-        text-align: left;
-        max-height: 300px;
-        overflow-y: auto;
-        padding: 15px;
-        border: 1px solid #e0e0e0;
-        border-radius: 12px;
-      }
-
-      .result-item {
-        padding: 12px;
-        border-bottom: 1px solid #f0f0f0;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-      }
-
-      .result-item:last-child {
-        border-bottom: none;
-      }
-
-      .result-icon {
-        font-size: 1.2rem;
-        width: 24px;
-      }
-
-      .result-correct .result-icon {
-        color: var(--success);
-      }
-
-      .result-incorrect .result-icon {
-        color: var(--danger);
-      }
-
-      .result-text {
-        flex: 1;
-      }
-
-      /* Celebration Effects */
-      .confetti {
-        position: absolute;
-        width: 10px;
-        height: 10px;
-        background: var(--primary);
-        border-radius: 50%;
-        animation: confetti-fall 5s linear forwards;
-      }
-
-      @keyframes confetti-fall {
-        0% {
-          transform: translateY(-100px) rotate(0deg);
-          opacity: 1;
-        }
-        100% {
-          transform: translateY(1000px) rotate(360deg);
-          opacity: 0;
-        }
-      }
-
-      /* Floating Animations */
-      .floating {
-        animation: floating 3s ease-in-out infinite;
-      }
-
-      @keyframes floating {
-        0% {
-          transform: translateY(0px);
-        }
-        50% {
-          transform: translateY(-10px);
-        }
-        100% {
-          transform: translateY(0px);
-        }
-      }
-
-      /* Difficulty Indicator */
-      .difficulty {
-        display: inline-block;
-        padding: 5px 12px;
-        border-radius: 20px;
-        font-size: 0.8rem;
-        font-weight: 600;
-        margin-left: 10px;
-      }
-
-      .difficulty.easy {
-        background: rgba(46, 204, 113, 0.2);
-        color: var(--success);
-      }
-
-      .difficulty.medium {
-        background: rgba(243, 156, 18, 0.2);
-        color: var(--warning);
-      }
-
-      .difficulty.hard {
-        background: rgba(231, 76, 60, 0.2);
-        color: var(--danger);
-      }
-
-      /* Streak Counter */
-      .streak {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        background: rgba(255, 101, 132, 0.1);
-        padding: 5px 10px;
-        border-radius: 20px;
-        color: var(--secondary);
-        font-weight: 600;
-      }
-
-      /* Timer */
-      .timer {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        background: rgba(78, 205, 196, 0.1);
-        padding: 5px 10px;
-        border-radius: 20px;
-        color: var(--accent);
-        font-weight: 600;
-      }
-
-      /* Level Progress */
-      .level-progress {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        margin-bottom: 20px;
-      }
-
-      .level {
-        font-weight: 700;
-        color: var(--primary);
-        font-size: 1.2rem;
-      }
-
-      /* Achievement Badges */
-      .badges {
-        display: flex;
-        justify-content: center;
-        gap: 15px;
-        margin: 20px 0;
-      }
-
-      .badge {
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        background: var(--light);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.5rem;
-        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-      }
-
-      .badge.unlocked {
-        background: linear-gradient(to right, var(--primary), var(--secondary));
-        color: white;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+          "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+          "Helvetica Neue", sans-serif;
+        -webkit-font-smoothing: antialiased;
       }
     </style>
   </head>
   <body>
-    <div class="container">
-      <header>
-        <h1><i class="fas fa-language"></i> Vocabulary Quest</h1>
-        <div class="subtitle">
-          Master English-Uzbek vocabulary through interactive challenges!
-        </div>
-      </header>
+    <div id="root"></div>
+    <script type="text/babel">
+      const { useState, useEffect } = React;
 
-      <div class="stats-bar">
-        <div class="stat-item">
-          <i class="fas fa-fire"></i>
-          <span>Streak: <span id="streakCount">0</span></span>
-        </div>
-        <div class="stat-item">
-          <i class="fas fa-trophy"></i>
-          <span>Level: <span id="levelCount">1</span></span>
-        </div>
-        <div class="stat-item">
-          <i class="fas fa-star"></i>
-          <span>Points: <span id="pointsCount">0</span></span>
-        </div>
-        <div class="stat-item timer">
-          <i class="fas fa-clock"></i>
-          <span id="timer">01:00</span>
-        </div>
-      </div>
+      const CheckCircle = ({ className }) => (
+        <svg
+          className={className}
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+          />
+        </svg>
+      );
 
-      <div class="progress-container">
-        <div class="progress-bar" id="progressBar"></div>
-      </div>
+      const XCircle = ({ className }) => (
+        <svg
+          className={className}
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+          />
+        </svg>
+      );
 
-      <div class="quiz-container" id="quizContainer">
-        <div class="level-progress">
-          <div class="level">Level <span id="currentLevel">1</span></div>
-          <div class="progress-container" style="flex: 1; margin: 0">
-            <div
-              class="progress-bar"
-              id="levelProgressBar"
-              style="width: 0%"
-            ></div>
-          </div>
-        </div>
+      const Trophy = ({ className }) => (
+        <svg
+          className={className}
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+          />
+        </svg>
+      );
 
-        <div class="question-container">
-          <div class="question-number">
-            <i class="fas fa-question-circle"></i>
-            Question <span id="questionNumber">1</span> of
-            <span id="totalQuestions">10</span>
-            <span class="difficulty easy" id="difficulty">Easy</span>
-          </div>
-          <div class="question" id="question">
-            What is the meaning of 'agree'?
-          </div>
-          <div class="hint" id="hint">
-            Hint: This word is about having the same opinion
-          </div>
-        </div>
+      const RotateCcw = ({ className }) => (
+        <svg
+          className={className}
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+          />
+        </svg>
+      );
 
-        <div class="options-container" id="optionsContainer">
-          <!-- Options will be generated here -->
-        </div>
+      const User = ({ className }) => (
+        <svg
+          className={className}
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+          />
+        </svg>
+      );
 
-        <div class="navigation">
-          <button id="hintBtn" class="btn-outline">
-            <i class="fas fa-lightbulb"></i> Show Hint
-          </button>
-          <div>
-            <button id="prevBtn" disabled>
-              <i class="fas fa-arrow-left"></i> Previous
-            </button>
-            <button id="nextBtn">
-              Next <i class="fas fa-arrow-right"></i>
-            </button>
-          </div>
-        </div>
-      </div>
+      const Download = ({ className }) => (
+        <svg
+          className={className}
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+          />
+        </svg>
+      );
 
-      <div class="score-container" id="scoreContainer">
-        <div class="score-card">
-          <div class="trophy">
-            <i class="fas fa-trophy"></i>
-          </div>
-          <div class="score-title">Quiz Completed!</div>
-          <div class="score-value" id="scoreValue">0/10</div>
-          <div class="score-message" id="scoreMessage">
-            Keep practicing to improve your vocabulary!
-          </div>
+      const allWords = [
+        // Unit 1
+        { word: "afraid", meaning: "qo'rqqan, cho'chigan", unit: 1 },
+        { word: "agree", meaning: "fikriga qo'shilmoq", unit: 1 },
+        { word: "angry", meaning: "jahli chiqqan", unit: 1 },
+        { word: "arrive", meaning: "yetib kelmoq", unit: 1 },
+        { word: "attack", meaning: "hujum qilmoq", unit: 1 },
+        { word: "bottom", meaning: "tagi, pasti", unit: 1 },
+        { word: "clever", meaning: "aqilli, ziyrak", unit: 1 },
+        { word: "cruel", meaning: "shafqatsiz", unit: 1 },
+        { word: "finally", meaning: "ahiyri, vanihoyat", unit: 1 },
+        { word: "hide", meaning: "yashirinmoq", unit: 1 },
+        { word: "hunt", meaning: "ov qilmoq", unit: 1 },
+        { word: "lot", meaning: "juda ko'p", unit: 1 },
+        { word: "middle", meaning: "o'rta, markaz", unit: 1 },
+        { word: "moment", meaning: "sekund, on", unit: 1 },
+        { word: "pleased", meaning: "hursand, mamnun", unit: 1 },
+        { word: "promise", meaning: "va'da bermoq", unit: 1 },
+        { word: "reply", meaning: "javob bermoq", unit: 1 },
+        { word: "safe", meaning: "hafsiz, behatar", unit: 1 },
+        { word: "trick", meaning: "hiyla, nayrang", unit: 1 },
+        { word: "well", meaning: "yaxshi", unit: 1 },
 
-          <div class="badges">
-            <div class="badge" id="badge1"><i class="fas fa-medal"></i></div>
-            <div class="badge" id="badge2"><i class="fas fa-star"></i></div>
-            <div class="badge" id="badge3"><i class="fas fa-crown"></i></div>
-          </div>
+        // Unit 2
+        { word: "adventure", meaning: "sarguzasht", unit: 2 },
+        { word: "approach", meaning: "yaqin kelmoq", unit: 2 },
+        { word: "carefully", meaning: "e'tibor bilan", unit: 2 },
+        { word: "chemical", meaning: "kimyoviy modda", unit: 2 },
+        { word: "create", meaning: "yaratmoq, yasamoq", unit: 2 },
+        { word: "evil", meaning: "yomon, yovuz", unit: 2 },
+        { word: "experiment", meaning: "tajriba, sinov", unit: 2 },
+        { word: "kill", meaning: "o'ldirmoq", unit: 2 },
+        { word: "laboratory", meaning: "labaratoriya", unit: 2 },
+        { word: "laugh", meaning: "kulgi", unit: 2 },
+        { word: "loud", meaning: "shovqinli, baland", unit: 2 },
+        { word: "nervous", meaning: "xavotirlangan", unit: 2 },
+        { word: "noise", meaning: "shovqin", unit: 2 },
+        { word: "project", meaning: "loyiha, yumush", unit: 2 },
+        { word: "scare", meaning: "qo'rqitmoq", unit: 2 },
+        { word: "secret", meaning: "sir", unit: 2 },
+        { word: "shout", meaning: "baqirmoq, qichqirmoq", unit: 2 },
+        { word: "smell", meaning: "hidlamoq", unit: 2 },
+        { word: "terrible", meaning: "juda yomon", unit: 2 },
+        { word: "worse", meaning: "yomonroq", unit: 2 },
 
-          <button id="restartBtn">
-            <i class="fas fa-redo"></i> Play Again
-          </button>
+        // Unit 3
+        { word: "alien", meaning: "o'zga sayyoralik", unit: 3 },
+        { word: "among", meaning: "orasida, ichida", unit: 3 },
+        { word: "chart", meaning: "grafik jadval, diagramma", unit: 3 },
+        { word: "cloud", meaning: "bulut", unit: 3 },
+        { word: "comprehend", meaning: "tushunmoq", unit: 3 },
+        { word: "describe", meaning: "ta'riflamoq", unit: 3 },
+        { word: "ever", meaning: "qachon bo'lsa ham", unit: 3 },
+        { word: "fail", meaning: "muvaffaqiyatsizlikka uchramoq", unit: 3 },
+        { word: "friendly", meaning: "do'stona, mehribon", unit: 3 },
+        { word: "grade", meaning: "baho", unit: 3 },
+        { word: "instead", meaning: "o'rniga", unit: 3 },
+        { word: "library", meaning: "kutubxona", unit: 3 },
+        { word: "planet", meaning: "sayyora", unit: 3 },
+        { word: "report", meaning: "hisobot", unit: 3 },
+        { word: "several", meaning: "bir nechta, bir talay", unit: 3 },
+        { word: "solve", meaning: "hal qilmoq, yechmoq", unit: 3 },
+        { word: "suddenly", meaning: "to'satdan, birdaniga", unit: 3 },
+        { word: "suppose", meaning: "faraz qilmoq", unit: 3 },
+        { word: "universe", meaning: "olam, koinot", unit: 3 },
+        { word: "view", meaning: "ko'rmoq, qaramoq", unit: 3 },
 
-          <div class="results-container" id="resultsContainer">
-            <!-- Results will be displayed here -->
-          </div>
-        </div>
-      </div>
-    </div>
+        // Unit 4
+        { word: "appropriate", meaning: "mos, to'g'ri", unit: 4 },
+        { word: "avoid", meaning: "yaqinlashmaslik", unit: 4 },
+        { word: "behave", meaning: "o'zini tutmoq", unit: 4 },
+        { word: "calm", meaning: "hotirjam", unit: 4 },
+        { word: "concern", meaning: "tashvish, g'am", unit: 4 },
+        { word: "content", meaning: "hursand, shod", unit: 4 },
+        { word: "expect", meaning: "umid qilmoq, kutmoq", unit: 4 },
+        { word: "frequently", meaning: "tez-tez", unit: 4 },
+        { word: "habit", meaning: "odat", unit: 4 },
+        { word: "instruct", meaning: "ko'rsatma bermoq", unit: 4 },
+        { word: "issue", meaning: "masala, muammo", unit: 4 },
+        { word: "none", meaning: "hech qancha", unit: 4 },
+        { word: "patient", meaning: "sabrli, toqatli", unit: 4 },
+        { word: "positive", meaning: "ijobiy", unit: 4 },
+        { word: "punish", meaning: "jazolamoq", unit: 4 },
+        { word: "represent", meaning: "vakil bo'lmoq", unit: 4 },
+        { word: "shake", meaning: "silkitmoq, siltamoq", unit: 4 },
+        { word: "spread", meaning: "tarqatmoq, surkamoq", unit: 4 },
+        { word: "stroll", meaning: "sayir qilmoq", unit: 4 },
+        { word: "village", meaning: "qishloq", unit: 4 },
 
-    <script>
-      // Enhanced vocabulary data with difficulty levels and hints
-      const vocabulary = [
-        {
-          english: "afraid",
-          uzbek: "qo'rqqan, cho'chigan",
-          difficulty: "easy",
-          hint: "Feeling scared or frightened",
-        },
-        {
-          english: "agree",
-          uzbek: "fikriga qo'shilmoq",
-          difficulty: "easy",
-          hint: "To have the same opinion",
-        },
-        {
-          english: "angry",
-          uzbek: "jahli chiqqan",
-          difficulty: "easy",
-          hint: "Strong feeling of annoyance",
-        },
-        {
-          english: "arrive",
-          uzbek: "yetib kelmoq",
-          difficulty: "easy",
-          hint: "To reach a destination",
-        },
-        {
-          english: "attack",
-          uzbek: "hujum qilmoq",
-          difficulty: "medium",
-          hint: "To act against someone aggressively",
-        },
-        {
-          english: "bottom",
-          uzbek: "tagi, pasti",
-          difficulty: "easy",
-          hint: "The lowest point or part",
-        },
-        {
-          english: "clever",
-          uzbek: "aqilli, ziyrak",
-          difficulty: "medium",
-          hint: "Quick to understand and learn",
-        },
-        {
-          english: "cruel",
-          uzbek: "shafqatsiz",
-          difficulty: "medium",
-          hint: "Willfully causing pain to others",
-        },
-        {
-          english: "finally",
-          uzbek: "ahiyri, vanihoyat",
-          difficulty: "easy",
-          hint: "After a long time or delay",
-        },
-        {
-          english: "hide",
-          uzbek: "yashirinmoq",
-          difficulty: "easy",
-          hint: "To put or keep out of sight",
-        },
-        {
-          english: "hunt",
-          uzbek: "ov qilmoq",
-          difficulty: "medium",
-          hint: "To chase and kill wild animals",
-        },
-        {
-          english: "lot",
-          uzbek: "juda ko'p",
-          difficulty: "easy",
-          hint: "A large number or amount",
-        },
-        {
-          english: "middle",
-          uzbek: "o'rta, markaz",
-          difficulty: "easy",
-          hint: "The central point or part",
-        },
-        {
-          english: "moment",
-          uzbek: "sekund, on",
-          difficulty: "easy",
-          hint: "A very brief period of time",
-        },
-        {
-          english: "pleased",
-          uzbek: "hursand, mamnun",
-          difficulty: "medium",
-          hint: "Feeling happy or satisfied",
-        },
-        {
-          english: "promise",
-          uzbek: "va'da bermoq",
-          difficulty: "medium",
-          hint: "A declaration to do something",
-        },
-        {
-          english: "reply",
-          uzbek: "javob bermoq",
-          difficulty: "easy",
-          hint: "To say or write in response",
-        },
-        {
-          english: "safe",
-          uzbek: "hafsiz, behatar",
-          difficulty: "easy",
-          hint: "Protected from danger or risk",
-        },
-        {
-          english: "trick",
-          uzbek: "hiyla, nayrang",
-          difficulty: "hard",
-          hint: "A cunning act to deceive someone",
-        },
-        {
-          english: "well",
-          uzbek: "yaxshi",
-          difficulty: "easy",
-          hint: "In a good or satisfactory way",
-        },
-        {
-          english: "adventure",
-          uzbek: "sarguzasht",
-          difficulty: "medium",
-          hint: "An exciting or unusual experience",
-        },
-        {
-          english: "approach",
-          uzbek: "yaqin kelmoq",
-          difficulty: "medium",
-          hint: "To come near to something",
-        },
-        {
-          english: "carefully",
-          uzbek: "e'tibor bilan",
-          difficulty: "easy",
-          hint: "In a way that avoids harm",
-        },
-        {
-          english: "chemical",
-          uzbek: "kimyoviy modda",
-          difficulty: "hard",
-          hint: "A substance with a distinct molecular composition",
-        },
-        {
-          english: "create",
-          uzbek: "yaratmoq, yasamoq",
-          difficulty: "medium",
-          hint: "To bring something into existence",
-        },
-        {
-          english: "evil",
-          uzbek: "yomon, yovuz",
-          difficulty: "medium",
-          hint: "Profoundly immoral and wicked",
-        },
-        {
-          english: "experiment",
-          uzbek: "tajriba, sinov",
-          difficulty: "hard",
-          hint: "A scientific procedure to make a discovery",
-        },
-        {
-          english: "kill",
-          uzbek: "o'ldirmoq",
-          difficulty: "medium",
-          hint: "To cause the death of a living being",
-        },
-        {
-          english: "laboratory",
-          uzbek: "labaratoriya",
-          difficulty: "hard",
-          hint: "A room for scientific experiments",
-        },
-        {
-          english: "laugh",
-          uzbek: "kulgi",
-          difficulty: "easy",
-          hint: "The sound of amusement",
-        },
+        // Unit 5
+        { word: "aware", meaning: "xabardor", unit: 5 },
+        { word: "badly", meaning: "yomon (darajada)", unit: 5 },
+        { word: "belong", meaning: "tegishli bo'lmoq", unit: 5 },
+        { word: "continue", meaning: "davom ettirmoq", unit: 5 },
+        { word: "error", meaning: "xato", unit: 5 },
+        { word: "experience", meaning: "tajriba", unit: 5 },
+        { word: "field", meaning: "maydon; soha", unit: 5 },
+        { word: "hurt", meaning: "og'ritmoq", unit: 5 },
+        { word: "judgment", meaning: "hukm; qaror", unit: 5 },
+        { word: "likely", meaning: "ehtimol; mumkin", unit: 5 },
+        { word: "normal", meaning: "odatiy", unit: 5 },
+        { word: "rare", meaning: "kam uchraydigan; noyob", unit: 5 },
+        { word: "relax", meaning: "dam olmoq; tinchlanmoq", unit: 5 },
+        { word: "request", meaning: "so'rov; iltimos qilmoq", unit: 5 },
+        { word: "reside", meaning: "yashamoq", unit: 5 },
+        { word: "result", meaning: "natija", unit: 5 },
+        { word: "roll", meaning: "dumalatmoq; aylanmoq", unit: 5 },
+        { word: "since", meaning: "...dan beri", unit: 5 },
+        { word: "visible", meaning: "ko'rinadigan", unit: 5 },
+        { word: "wild", meaning: "yovvoyi", unit: 5 },
+
+        // Unit 6
+        { word: "advantage", meaning: "afzallik", unit: 6 },
+        { word: "cause", meaning: "sabab bo'lmoq", unit: 6 },
+        { word: "choice", meaning: "tanlov", unit: 6 },
+        { word: "community", meaning: "jamoa; hamjamiyat", unit: 6 },
+        { word: "dead", meaning: "o'lik", unit: 6 },
+        { word: "distance", meaning: "masofa", unit: 6 },
+        { word: "escape", meaning: "qochmoq", unit: 6 },
+        { word: "face", meaning: "yuzma-yuz bo'lmoq", unit: 6 },
+        { word: "follow", meaning: "ergashmoq; kuzatmoq", unit: 6 },
+        { word: "fright", meaning: "qo'rquv", unit: 6 },
+        { word: "ghost", meaning: "arvoh", unit: 6 },
+        { word: "individual", meaning: "shaxs; alohida odam", unit: 6 },
+        { word: "pet", meaning: "uy hayvoni", unit: 6 },
+        { word: "reach", meaning: "yetmoq", unit: 6 },
+        { word: "return", meaning: "qaytmoq", unit: 6 },
+        { word: "survive", meaning: "omon qolmoq", unit: 6 },
+        { word: "upset", meaning: "xafa; bezovta", unit: 6 },
+        { word: "voice", meaning: "ovoz", unit: 6 },
+        { word: "weather", meaning: "ob-havo", unit: 6 },
+        { word: "wise", meaning: "dono; oqil", unit: 6 },
+
+        // Unit 7
+        { word: "allow", meaning: "ruxsat bermoq", unit: 7 },
+        { word: "announce", meaning: "e'lon qilmoq", unit: 7 },
+        { word: "beside", meaning: "yonida", unit: 7 },
+        { word: "challenge", meaning: "sinov; qiyinchilik", unit: 7 },
+        { word: "claim", meaning: "da'vo qilmoq", unit: 7 },
+        { word: "condition", meaning: "holat; shart", unit: 7 },
+        { word: "contribute", meaning: "hissa qo'shmoq", unit: 7 },
+        { word: "difference", meaning: "farq", unit: 7 },
+        { word: "divide", meaning: "bo'lib chiqarmoq", unit: 7 },
+        { word: "expert", meaning: "mutaxassis", unit: 7 },
+        { word: "famous", meaning: "mashhur", unit: 7 },
+        { word: "force", meaning: "kuch; majburlamoq", unit: 7 },
+        { word: "harm", meaning: "zarar", unit: 7 },
+        { word: "lay", meaning: "qo'yib qo'ymoq", unit: 7 },
+        { word: "peace", meaning: "tinchlik", unit: 7 },
+        { word: "prince", meaning: "shahzoda", unit: 7 },
+        { word: "protect", meaning: "himoya qilmoq", unit: 7 },
+        { word: "sense", meaning: "sezgi; ma'no", unit: 7 },
+        { word: "sudden", meaning: "to'satdan", unit: 7 },
+        { word: "therefore", meaning: "shuning uchun", unit: 7 },
+
+        // Unit 8
+        { word: "accept", meaning: "qabul qilmoq", unit: 8 },
+        { word: "arrange", meaning: "tartibga solmoq", unit: 8 },
+        { word: "attend", meaning: "qatnashmoq", unit: 8 },
+        { word: "balance", meaning: "muvozanat", unit: 8 },
+        { word: "contrast", meaning: "qarama-qarshi", unit: 8 },
+        { word: "encourage", meaning: "ruhlantirmoq", unit: 8 },
+        { word: "familiar", meaning: "tanish; ma'lum", unit: 8 },
+        { word: "grab", meaning: "ushlamoq", unit: 8 },
+        { word: "hang", meaning: "osmoq", unit: 8 },
+        { word: "huge", meaning: "juda katta", unit: 8 },
+        { word: "necessary", meaning: "zarur", unit: 8 },
+        { word: "pattern", meaning: "naqsh; tartib", unit: 8 },
+        { word: "propose", meaning: "taklif qilmoq", unit: 8 },
+        { word: "purpose", meaning: "maqsad", unit: 8 },
+        { word: "release", meaning: "ozod qilmoq", unit: 8 },
+        { word: "require", meaning: "talab qilmoq", unit: 8 },
+        { word: "single", meaning: "bitta; yakka", unit: 8 },
+        { word: "success", meaning: "muvaffaqiyat", unit: 8 },
+        { word: "tear", meaning: "yirtmoq; yosh", unit: 8 },
+        { word: "theory", meaning: "nazariya", unit: 8 },
+
+        // Unit 9
+        { word: "against", meaning: "qarshi", unit: 9 },
+        { word: "beach", meaning: "plyaj; sohil", unit: 9 },
+        { word: "damage", meaning: "zarar yetkazmoq", unit: 9 },
+        { word: "discover", meaning: "kashf etmoq", unit: 9 },
+        { word: "emotion", meaning: "his-tuyg'u", unit: 9 },
+        { word: "fix", meaning: "ta'mirlash", unit: 9 },
+        { word: "frank", meaning: "rostgo'y; samimiy", unit: 9 },
+        { word: "identify", meaning: "aniqlamoq", unit: 9 },
+        { word: "island", meaning: "orol", unit: 9 },
+        { word: "ocean", meaning: "okean", unit: 9 },
+        { word: "perhaps", meaning: "ehtimol; balki", unit: 9 },
+        { word: "pleasant", meaning: "yoqimli", unit: 9 },
+        { word: "prevent", meaning: "to'smoq; oldini olmoq", unit: 9 },
+        { word: "rock", meaning: "tosh", unit: 9 },
+        { word: "save", meaning: "saqlamoq; qutqarish", unit: 9 },
+        { word: "step", meaning: "qadam; bosqich", unit: 9 },
+        { word: "still", meaning: "hanuz; tinch", unit: 9 },
+        { word: "taste", meaning: "ta'm; tatib ko'rmoq", unit: 9 },
+        { word: "throw", meaning: "uloqtirmoq", unit: 9 },
+        { word: "wave", meaning: "to'lqin", unit: 9 },
+
+        // Unit 10
+        { word: "benefit", meaning: "foyda", unit: 10 },
+        { word: "certain", meaning: "ma'lum; aniq", unit: 10 },
+        { word: "chance", meaning: "imkoniyat", unit: 10 },
+        { word: "effect", meaning: "ta'sir; natija", unit: 10 },
+        { word: "essential", meaning: "zarur; muhim", unit: 10 },
+        { word: "far", meaning: "uzoq", unit: 10 },
+        { word: "focus", meaning: "diqqat markazi", unit: 10 },
+        { word: "function", meaning: "funksiya; vazifa", unit: 10 },
+        { word: "grass", meaning: "o't; maysa", unit: 10 },
+        { word: "guard", meaning: "qo'riqchi", unit: 10 },
+        { word: "image", meaning: "tasvir; tasavvur", unit: 10 },
+        { word: "immediate", meaning: "zudlik bilan; darhol", unit: 10 },
+        { word: "primary", meaning: "asosiy; birlamchi", unit: 10 },
+        { word: "proud", meaning: "faxrlangan", unit: 10 },
+        { word: "remain", meaning: "qolmoq", unit: 10 },
+        { word: "rest", meaning: "dam; dam olmoq", unit: 10 },
+        { word: "separate", meaning: "ajratilgan", unit: 10 },
+        { word: "site", meaning: "joy; sayt", unit: 10 },
+        { word: "tail", meaning: "dum", unit: 10 },
+        { word: "trouble", meaning: "muammo; qiyinchilik", unit: 10 },
+
+        // Unit 11
+        { word: "anymore", meaning: "endi", unit: 11 },
+        { word: "asleep", meaning: "uxlab", unit: 11 },
+        { word: "berry", meaning: "butagay", unit: 11 },
+        { word: "collect", meaning: "yig'moq", unit: 11 },
+        { word: "compete", meaning: "bellashmoq; raqobatlashmoq", unit: 11 },
+        { word: "conversation", meaning: "suhbat", unit: 11 },
+        { word: "creature", meaning: "mavjudot; jonivor", unit: 11 },
+        { word: "decision", meaning: "qaror", unit: 11 },
+        { word: "either", meaning: "(ikkisidan) birisi", unit: 11 },
+        { word: "forest", meaning: "o'rmon", unit: 11 },
+        { word: "ground", meaning: "yer; tuproq", unit: 11 },
+        { word: "introduce", meaning: "tanishtirmoq", unit: 11 },
+        { word: "marry", meaning: "turmush qurmoq", unit: 11 },
+        { word: "prepare", meaning: "tayyorlamoq", unit: 11 },
+        { word: "sail", meaning: "suzmoq", unit: 11 },
+        { word: "serious", meaning: "jiddiy", unit: 11 },
+        { word: "spend", meaning: "sarflamoq", unit: 11 },
+        { word: "strange", meaning: "notanish; g'ayrioddiy", unit: 11 },
+        { word: "truth", meaning: "haqiqat", unit: 11 },
+        { word: "wake", meaning: "uyg'onmoq", unit: 11 },
+
+        // Unit 12
+        { word: "alone", meaning: "yolg'iz", unit: 12 },
+        { word: "apartment", meaning: "kvartira", unit: 12 },
+        { word: "article", meaning: "maqola; buyum", unit: 12 },
+        { word: "artist", meaning: "rassom; san'atkor", unit: 12 },
+        { word: "attitude", meaning: "munosabat", unit: 12 },
+        { word: "compare", meaning: "solishtirmoq", unit: 12 },
+        { word: "judge", meaning: "hukm chiqarmoq; sudya", unit: 12 },
+        { word: "magazine", meaning: "jurnal", unit: 12 },
+        { word: "material", meaning: "material; moddiy", unit: 12 },
+        { word: "meal", meaning: "ovqat", unit: 12 },
+        { word: "method", meaning: "usul", unit: 12 },
+        { word: "neighbor", meaning: "qo'shni", unit: 12 },
+        { word: "professional", meaning: "professional; mutaxassis", unit: 12 },
+        { word: "profit", meaning: "foyda", unit: 12 },
+        { word: "quality", meaning: "sifat", unit: 12 },
+        { word: "shape", meaning: "shakl", unit: 12 },
+        { word: "space", meaning: "bo'sh joy; fazo", unit: 12 },
+        { word: "stair", meaning: "zinapoya", unit: 12 },
+        { word: "symbol", meaning: "ramz; belgi", unit: 12 },
+        { word: "thin", meaning: "yupqa; ingichka", unit: 12 },
+
+        // Unit 13
+        { word: "blood", meaning: "qon", unit: 13 },
+        { word: "burn", meaning: "kuymoq, yoqmoq", unit: 13 },
+        { word: "cell", meaning: "hujayra", unit: 13 },
+        { word: "contain", meaning: "o'z ichiga olmoq", unit: 13 },
+        { word: "correct", meaning: "to'g'ri; tuzatmoq", unit: 13 },
+        { word: "crop", meaning: "hosil", unit: 13 },
+        { word: "demand", meaning: "talab qilmoq", unit: 13 },
+        { word: "equal", meaning: "teng; bir xil", unit: 13 },
+        { word: "feed", meaning: "boqmoq", unit: 13 },
+        { word: "hole", meaning: "teshik", unit: 13 },
+        { word: "increase", meaning: "oshmoq; ko'paytirmoq", unit: 13 },
+        { word: "lord", meaning: "mulkdor; janob", unit: 13 },
+        { word: "owe", meaning: "qarzdor bo'lmoq", unit: 13 },
+        { word: "position", meaning: "pozitsiya; holat", unit: 13 },
+        { word: "raise", meaning: "ko'tarish", unit: 13 },
+        { word: "responsible", meaning: "mas'uliyatli", unit: 13 },
+        { word: "sight", meaning: "ko'rinish", unit: 13 },
+        { word: "spot", meaning: "joy; dog'", unit: 13 },
+        { word: "structure", meaning: "tuzilma; bino", unit: 13 },
+        { word: "whole", meaning: "butun; to'liq", unit: 13 },
+
+        // Unit 14
+        { word: "coach", meaning: "murabbiy", unit: 14 },
+        { word: "control", meaning: "nazorat; boshqarish", unit: 14 },
+        { word: "description", meaning: "ta'rif; tasvir", unit: 14 },
+        { word: "direct", meaning: "yo'naltirmoq", unit: 14 },
+        { word: "exam", meaning: "imtihon", unit: 14 },
+        { word: "example", meaning: "misol", unit: 14 },
+        { word: "limit", meaning: "cheklov", unit: 14 },
+        { word: "local", meaning: "mahalliy", unit: 14 },
+        { word: "magical", meaning: "sehrli", unit: 14 },
+        { word: "mail", meaning: "pochta", unit: 14 },
+        { word: "novel", meaning: "roman", unit: 14 },
+        { word: "outline", meaning: "eskiz; asosiy nuqtalar", unit: 14 },
+        { word: "poet", meaning: "shoir", unit: 14 },
+        { word: "print", meaning: "chop etmoq", unit: 14 },
+        { word: "scene", meaning: "sahna; voqea manzarasi", unit: 14 },
+        { word: "sheet", meaning: "varaq; choyshab", unit: 14 },
+        { word: "silly", meaning: "ahmoqona", unit: 14 },
+        { word: "store", meaning: "do'kon; saqlamoq", unit: 14 },
+        { word: "suffer", meaning: "azob chekish", unit: 14 },
+        { word: "technology", meaning: "texnologiya", unit: 14 },
+
+        // Unit 15
+        { word: "across", meaning: "...ustidan; ...bo'ylab", unit: 15 },
+        { word: "breathe", meaning: "nafas olmoq", unit: 15 },
+        { word: "characteristic", meaning: "xususiyat", unit: 15 },
+        { word: "consume", meaning: "iste'mol qilmoq", unit: 15 },
+        { word: "excite", meaning: "hayajonlantirmoq", unit: 15 },
+        { word: "extreme", meaning: "ekstrem", unit: 15 },
+        { word: "fear", meaning: "qo'rquv; qo'rqmoq", unit: 15 },
+        { word: "fortunate", meaning: "omadli; baxtli", unit: 15 },
+        { word: "happen", meaning: "sodir bo'lmoq", unit: 15 },
+        { word: "length", meaning: "uzunlik", unit: 15 },
+        { word: "mistake", meaning: "xato", unit: 15 },
+        { word: "observe", meaning: "kuzatmoq", unit: 15 },
+        { word: "opportunity", meaning: "imkoniyat", unit: 15 },
+        { word: "prize", meaning: "mukofot; sovrin", unit: 15 },
+        { word: "race", meaning: "poyga; irq", unit: 15 },
+        { word: "realize", meaning: "anglamoq; sezmoq", unit: 15 },
+        { word: "respond", meaning: "javob bermoq", unit: 15 },
+        { word: "risk", meaning: "xavf", unit: 15 },
+        { word: "wonder", meaning: "ajablanmoq", unit: 15 },
+        { word: "yet", meaning: "hali; baribir", unit: 15 },
+
+        // Unit 16
+        { word: "academy", meaning: "akademiya", unit: 16 },
+        { word: "ancient", meaning: "qadimgi", unit: 16 },
+        { word: "board", meaning: "doska; kengash", unit: 16 },
+        { word: "century", meaning: "asr", unit: 16 },
+        { word: "clue", meaning: "iz; dalil", unit: 16 },
+        { word: "concert", meaning: "kontsert", unit: 16 },
+        { word: "county", meaning: "okrug; tuman", unit: 16 },
+        { word: "dictionary", meaning: "lug'at", unit: 16 },
+        { word: "exist", meaning: "mavjud bo'lmoq", unit: 16 },
+        { word: "flat", meaning: "tekis; kvartira", unit: 16 },
+        { word: "gentleman", meaning: "janob", unit: 16 },
+        { word: "hidden", meaning: "yashirilgan", unit: 16 },
+        { word: "maybe", meaning: "balki; ehtimol", unit: 16 },
+        { word: "officer", meaning: "ofitser", unit: 16 },
+        { word: "original", meaning: "asl; original", unit: 16 },
+        { word: "pound", meaning: "funt; urish", unit: 16 },
+        { word: "process", meaning: "jarayon", unit: 16 },
+        { word: "publish", meaning: "nashr etmoq", unit: 16 },
+        { word: "theater", meaning: "teatr", unit: 16 },
+        { word: "wealth", meaning: "boylik", unit: 16 },
+
+        // Unit 17
+        { word: "appreciate", meaning: "qadrlamoq", unit: 17 },
+        { word: "available", meaning: "mavjud", unit: 17 },
+        { word: "beat", meaning: "mag'lub etmoq; urmoq", unit: 17 },
+        { word: "bright", meaning: "yorqin; zukko", unit: 17 },
+        { word: "celebrate", meaning: "nishonlamoq", unit: 17 },
+        { word: "determine", meaning: "aniqlamoq", unit: 17 },
+        { word: "disappear", meaning: "yo'qolmoq", unit: 17 },
+        { word: "else", meaning: "boshqa; aks holda", unit: 17 },
+        { word: "fair", meaning: "adolatli", unit: 17 },
+        { word: "flow", meaning: "oqim; oqmoq", unit: 17 },
+        { word: "forward", meaning: "oldinga", unit: 17 },
+        { word: "hill", meaning: "tepalik", unit: 17 },
+        { word: "level", meaning: "daraja", unit: 17 },
+        { word: "lone", meaning: "yolg'iz; yakka", unit: 17 },
+        { word: "puddle", meaning: "hovuzcha", unit: 17 },
+        { word: "response", meaning: "javob; ta'sir", unit: 17 },
+        { word: "season", meaning: "fasl; mavsum", unit: 17 },
+        { word: "solution", meaning: "yechim", unit: 17 },
+        { word: "waste", meaning: "isrof", unit: 17 },
+        { word: "whether", meaning: "...yoki yo'q", unit: 17 },
+
+        // Unit 18
+        { word: "argue", meaning: "bahslashmoq", unit: 18 },
+        { word: "communicate", meaning: "muloqot qilmoq", unit: 18 },
+        { word: "crowd", meaning: "olomon", unit: 18 },
+        { word: "depend", meaning: "bog'liq bo'lmoq", unit: 18 },
+        { word: "dish", meaning: "idish; taom", unit: 18 },
+        { word: "empty", meaning: "bo'sh", unit: 18 },
+        { word: "exact", meaning: "aniq; to'g'ri", unit: 18 },
+        { word: "fresh", meaning: "yangi; toza", unit: 18 },
+        { word: "gather", meaning: "to'plamoq", unit: 18 },
+        { word: "indicate", meaning: "ko'rsatmoq", unit: 18 },
+        { word: "item", meaning: "birlik; predmet", unit: 18 },
+        { word: "offer", meaning: "taklif qilmoq", unit: 18 },
+        { word: "price", meaning: "narx", unit: 18 },
+        { word: "product", meaning: "mahsulot", unit: 18 },
+        { word: "property", meaning: "mulk; xususiyat", unit: 18 },
+        { word: "purchase", meaning: "sotib olmoq", unit: 18 },
+        { word: "recommend", meaning: "tavsiya qilmoq", unit: 18 },
+        { word: "select", meaning: "tanlamoq", unit: 18 },
+        { word: "tool", meaning: "asbob; vosita", unit: 18 },
+        { word: "treat", meaning: "muomala qilmoq", unit: 18 },
+
+        // Unit 19
+        { word: "alive", meaning: "tirik", unit: 19 },
+        { word: "bone", meaning: "suyak", unit: 19 },
+        { word: "bother", meaning: "bezovta qilmoq", unit: 19 },
+        { word: "captain", meaning: "kapitan", unit: 19 },
+        { word: "conclusion", meaning: "xulosa", unit: 19 },
+        { word: "doubt", meaning: "shubha", unit: 19 },
+        { word: "explore", meaning: "o'rganmoq; izlanmoq", unit: 19 },
+        { word: "foreign", meaning: "chet el; begona", unit: 19 },
+        { word: "glad", meaning: "xursand", unit: 19 },
+        { word: "however", meaning: "biroq; ammo", unit: 19 },
+        { word: "injustice", meaning: "adolatsizlik", unit: 19 },
+        { word: "international", meaning: "xalqaro", unit: 19 },
+        { word: "lawyer", meaning: "yurist; advokat", unit: 19 },
+        { word: "mention", meaning: "tilga olmoq", unit: 19 },
+        { word: "policy", meaning: "siyosat", unit: 19 },
+        { word: "social", meaning: "ijtimoiy", unit: 19 },
+        { word: "speech", meaning: "nutq", unit: 19 },
+        { word: "staff", meaning: "xodimlar", unit: 19 },
+        { word: "toward", meaning: "tomon; nisbatan", unit: 19 },
+        { word: "wood", meaning: "yog'och", unit: 19 },
+
+        // Unit 20
+        { word: "achieve", meaning: "erishmoq", unit: 20 },
+        { word: "advise", meaning: "maslahat bermoq", unit: 20 },
+        { word: "already", meaning: "allaqachon", unit: 20 },
+        { word: "basic", meaning: "asosiy; oddiy", unit: 20 },
+        { word: "bit", meaning: "kichik qism; ozgina", unit: 20 },
+        { word: "consider", meaning: "hisobga olmoq", unit: 20 },
+        { word: "destroy", meaning: "vayron qilmoq", unit: 20 },
+        { word: "entertain", meaning: "zavqlantirmoq", unit: 20 },
+        { word: "extra", meaning: "qo'shimcha; ortiqcha", unit: 20 },
+        { word: "goal", meaning: "maqsad; gol", unit: 20 },
+        { word: "lie", meaning: "yolg'on aytmoq; yotmoq", unit: 20 },
+        { word: "meat", meaning: "go'sht", unit: 20 },
+        { word: "opinion", meaning: "fikr; mulohaza", unit: 20 },
+        { word: "real", meaning: "haqiqiy", unit: 20 },
+        { word: "reflect", meaning: "aks ettirmoq", unit: 20 },
+        { word: "regard", meaning: "hisoblamoq; hurmat", unit: 20 },
+        { word: "serve", meaning: "xizmat qilmoq", unit: 20 },
+        { word: "vegetable", meaning: "sabzavot", unit: 20 },
+        { word: "war", meaning: "urush", unit: 20 },
+        { word: "worth", meaning: "qiymat; arziydi", unit: 20 },
+
+        // Unit 21
+        { word: "appear", meaning: "paydo bo'lmoq", unit: 21 },
+        { word: "base", meaning: "asos; poydevor", unit: 21 },
+        { word: "brain", meaning: "miya", unit: 21 },
+        { word: "career", meaning: "kasb; faoliyat", unit: 21 },
+        { word: "clerk", meaning: "kotib", unit: 21 },
+        { word: "effort", meaning: "harakat; urinish", unit: 21 },
+        { word: "enter", meaning: "kirish; kirmoq", unit: 21 },
+        { word: "excellent", meaning: "a'lo; juda yaxshi", unit: 21 },
+        { word: "hero", meaning: "qahramon", unit: 21 },
+        { word: "hurry", meaning: "shoshilmoq", unit: 21 },
+        { word: "inform", meaning: "xabardor qilmoq", unit: 21 },
+        { word: "later", meaning: "keyin; keyinroq", unit: 21 },
+        { word: "leave", meaning: "tark etmoq; ketmoq", unit: 21 },
+        { word: "locate", meaning: "joylashmoq; topmoq", unit: 21 },
+        { word: "nurse", meaning: "hamshira", unit: 21 },
+        { word: "operation", meaning: "operatsiya", unit: 21 },
+        { word: "pain", meaning: "og'riq; azob", unit: 21 },
+        { word: "refuse", meaning: "rad etmoq", unit: 21 },
+        { word: "though", meaning: "garchi", unit: 21 },
+        { word: "various", meaning: "turli; xilma-xil", unit: 21 },
+
+        // Unit 22
+        { word: "actual", meaning: "haqiqiy", unit: 22 },
+        { word: "amaze", meaning: "hayratda qoldirmoq", unit: 22 },
+        { word: "charge", meaning: "haq olmoq; to'lov", unit: 22 },
+        { word: "comfort", meaning: "qulaylik; tasalli", unit: 22 },
+        { word: "contact", meaning: "aloqa; bog'lanmoq", unit: 22 },
+        { word: "customer", meaning: "mijoz", unit: 22 },
+        { word: "deliver", meaning: "yetkazmoq", unit: 22 },
+        { word: "earn", meaning: "topmoq (pul, hurmat)", unit: 22 },
+        { word: "gate", meaning: "darvoza", unit: 22 },
+        { word: "include", meaning: "o'z ichiga olmoq", unit: 22 },
+        { word: "manage", meaning: "boshqarmoq", unit: 22 },
+        { word: "mystery", meaning: "sir; jumboq", unit: 22 },
+        { word: "occur", meaning: "sodir bo'lmoq", unit: 22 },
+        { word: "opposite", meaning: "qarama-qarshi", unit: 22 },
+        { word: "plate", meaning: "likopcha", unit: 22 },
+        { word: "receive", meaning: "qabul qilmoq", unit: 22 },
+        { word: "reward", meaning: "mukofot", unit: 22 },
+        { word: "set", meaning: "qo'ymoq; o'rnatmoq", unit: 22 },
+        { word: "steal", meaning: "o'g'irlamoq", unit: 22 },
+        { word: "thief", meaning: "o'g'ri", unit: 22 },
+
+        // Unit 23
+        { word: "advance", meaning: "ilgarilamoq", unit: 23 },
+        { word: "athlete", meaning: "sportchi", unit: 23 },
+        { word: "average", meaning: "o'rtacha", unit: 23 },
+        { word: "behavior", meaning: "xulq-atvor", unit: 23 },
+        { word: "behind", meaning: "orqasida", unit: 23 },
+        { word: "course", meaning: "kurs; yo'nalish", unit: 23 },
+        { word: "lower", meaning: "tushirmoq; past", unit: 23 },
+        { word: "match", meaning: "mos kelmoq; o'yin", unit: 23 },
+        { word: "member", meaning: "a'zo", unit: 23 },
+        { word: "mental", meaning: "ruhiy; aqliy", unit: 23 },
+        { word: "passenger", meaning: "yo'lovchi", unit: 23 },
+        { word: "personality", meaning: "shaxsiyat", unit: 23 },
+        { word: "poem", meaning: "she'r", unit: 23 },
+        { word: "pole", meaning: "ustun; qutb", unit: 23 },
+        { word: "remove", meaning: "olib tashlamoq", unit: 23 },
+        { word: "safety", meaning: "xavfsizlik", unit: 23 },
+        { word: "shoot", meaning: "otmoq", unit: 23 },
+        { word: "sound", meaning: "ovoz; sog'lom", unit: 23 },
+        { word: "swim", meaning: "suzmoq", unit: 23 },
+        { word: "web", meaning: "o'rgimchak to'ri", unit: 23 },
+
+        // Unit 24
+        { word: "block", meaning: "to'smoq; to'siq", unit: 24 },
+        { word: "cheer", meaning: "olqishlamoq", unit: 24 },
+        { word: "complex", meaning: "murakkab", unit: 24 },
+        { word: "critic", meaning: "tanqidchi", unit: 24 },
+        { word: "event", meaning: "voqea", unit: 24 },
+        { word: "exercise", meaning: "mashq", unit: 24 },
+        { word: "fit", meaning: "mos kelmoq; sog'lom", unit: 24 },
+        { word: "friendship", meaning: "do'stlik", unit: 24 },
+        { word: "guide", meaning: "yo'l ko'rsatuvchi", unit: 24 },
+        { word: "lack", meaning: "yetishmaslik", unit: 24 },
+        { word: "passage", meaning: "yo'lak; parcha", unit: 24 },
+        { word: "perform", meaning: "ijro etmoq", unit: 24 },
+        { word: "pressure", meaning: "bosim", unit: 24 },
+        { word: "probable", meaning: "ehtimoliy", unit: 24 },
+        { word: "public", meaning: "omma; jamoat", unit: 24 },
+        { word: "strike", meaning: "urmoq", unit: 24 },
+        { word: "support", meaning: "qo'llab-quvvatlamoq", unit: 24 },
+        { word: "task", meaning: "vazifa", unit: 24 },
+        { word: "term", meaning: "atama; muddat", unit: 24 },
+        { word: "unite", meaning: "birlashtirmoq", unit: 24 },
+
+        // Unit 25
+        { word: "associate", meaning: "bog'lamoq", unit: 25 },
+        { word: "environment", meaning: "muhit; atrof", unit: 25 },
+        { word: "factory", meaning: "zavod; fabrika", unit: 25 },
+        { word: "feature", meaning: "xususiyat; belgi", unit: 25 },
+        { word: "instance", meaning: "misol; holat", unit: 25 },
+        { word: "involve", meaning: "jalb qilmoq", unit: 25 },
+        { word: "medicine", meaning: "dori; tibbiyot", unit: 25 },
+        { word: "mix", meaning: "aralashtirmoq", unit: 25 },
+        { word: "organize", meaning: "tashkil qilmoq", unit: 25 },
+        { word: "period", meaning: "davr; muddat", unit: 25 },
+        { word: "populate", meaning: "yashamoq", unit: 25 },
+        { word: "produce", meaning: "ishlab chiqarmoq", unit: 25 },
+        { word: "range", meaning: "diapazon; tur", unit: 25 },
+        { word: "recognize", meaning: "tanimoq; bilmoq", unit: 25 },
+        { word: "regular", meaning: "muntazam; doimiy", unit: 25 },
+        { word: "sign", meaning: "belgi; imzo", unit: 25 },
+        { word: "tip", meaning: "maslahat; uch", unit: 25 },
+        { word: "tradition", meaning: "an'ana", unit: 25 },
+        { word: "trash", meaning: "axlat", unit: 25 },
+        { word: "wide", meaning: "keng", unit: 25 },
+
+        // Unit 26
+        { word: "advice", meaning: "maslahat", unit: 26 },
+        { word: "along", meaning: "bo'ylab; yonma-yon", unit: 26 },
+        { word: "attention", meaning: "e'tibor", unit: 26 },
+        { word: "attract", meaning: "jalb qilmoq", unit: 26 },
+        { word: "climb", meaning: "chiqmoq; tirmashmoq", unit: 26 },
+        { word: "drop", meaning: "tushirmoq; tomchi", unit: 26 },
+        { word: "final", meaning: "yakuniy; oxirgi", unit: 26 },
+        { word: "further", meaning: "bundan keyingi", unit: 26 },
+        { word: "imply", meaning: "ishora qilmoq", unit: 26 },
+        { word: "maintain", meaning: "saqlamoq", unit: 26 },
+        { word: "neither", meaning: "na … na …", unit: 26 },
+        { word: "otherwise", meaning: "aks holda", unit: 26 },
+        { word: "physical", meaning: "jismoniy", unit: 26 },
+        { word: "prove", meaning: "isbotlamoq", unit: 26 },
+        { word: "react", meaning: "reaksiya bildirmoq", unit: 26 },
+        { word: "ride", meaning: "minmoq; sayr qilmoq", unit: 26 },
+        { word: "situated", meaning: "joylashgan", unit: 26 },
+        { word: "society", meaning: "jamiyat", unit: 26 },
+        { word: "standard", meaning: "mezon; standart", unit: 26 },
+        { word: "suggest", meaning: "taklif qilmoq", unit: 26 },
+
+        // Unit 27
+        { word: "actually", meaning: "aslida; rostdan ham", unit: 27 },
+        { word: "bite", meaning: "tishlash; chaqmoq", unit: 27 },
+        { word: "coast", meaning: "qirg'oq; sohil", unit: 27 },
+        { word: "deal", meaning: "kelishuv", unit: 27 },
+        { word: "desert", meaning: "cho'l; tark etmoq", unit: 27 },
+        { word: "effective", meaning: "samarali", unit: 27 },
+        { word: "examine", meaning: "tekshirmoq", unit: 27 },
+        { word: "false", meaning: "noto'g'ri; soxta", unit: 27 },
+        { word: "figure", meaning: "tushunib olmoq; aniqlamoq", unit: 27 },
+        { word: "gift", meaning: "sovg'a", unit: 27 },
+        { word: "hunger", meaning: "ochlik", unit: 27 },
+        { word: "imagine", meaning: "tasavvur qilmoq", unit: 27 },
+        { word: "journey", meaning: "safar; sayohat", unit: 27 },
+        { word: "puzzle", meaning: "jumboq", unit: 27 },
+        { word: "quite", meaning: "juda; ancha", unit: 27 },
+        { word: "rather", meaning: "biroz; aksincha", unit: 27 },
+        { word: "specific", meaning: "aniq; belgilangan", unit: 27 },
+        { word: "spider", meaning: "o'rgimchak", unit: 27 },
+        { word: "tour", meaning: "ekskursiya; sayr", unit: 27 },
+        { word: "trip", meaning: "sayohat; safar", unit: 27 },
+
+        // Unit 28
+        { word: "band", meaning: "guruh; musiqa guruhi", unit: 28 },
+        { word: "barely", meaning: "deyarli emas", unit: 28 },
+        { word: "boring", meaning: "zerikarli", unit: 28 },
+        { word: "cancel", meaning: "bekor qilmoq", unit: 28 },
+        { word: "driveway", meaning: "uyga olib boruvchi tor yo'l", unit: 28 },
+        { word: "garbage", meaning: "axlat", unit: 28 },
+        { word: "instrument", meaning: "asbob; instrument", unit: 28 },
+        { word: "list", meaning: "ro'yxat", unit: 28 },
+        { word: "magic", meaning: "sehr; sehrli kuch", unit: 28 },
+        { word: "message", meaning: "xabar; habar", unit: 28 },
+        { word: "notice", meaning: "payqamoq; e'lon", unit: 28 },
+        { word: "own", meaning: "egalik qilmoq", unit: 28 },
+        { word: "predict", meaning: "taxmin qilmoq", unit: 28 },
+        { word: "professor", meaning: "professor", unit: 28 },
+        { word: "rush", meaning: "shoshilmoq", unit: 28 },
+        { word: "schedule", meaning: "jadval; reja", unit: 28 },
+        { word: "share", meaning: "ulashmoq; bo'lishmoq", unit: 28 },
+        { word: "stage", meaning: "sahna; bosqich", unit: 28 },
+        { word: "storm", meaning: "bo'ron", unit: 28 },
+        { word: "within", meaning: "ichida; doirasida", unit: 28 },
+
+        // Unit 29
+        { word: "advertise", meaning: "reklama qilmoq", unit: 29 },
+        { word: "assign", meaning: "tayinlamoq", unit: 29 },
+        { word: "audience", meaning: "tinglovchi auditoriya", unit: 29 },
+        { word: "breakfast", meaning: "nonushta", unit: 29 },
+        { word: "competition", meaning: "musobaqa", unit: 29 },
+        { word: "cool", meaning: "sovuq; salqin", unit: 29 },
+        { word: "gain", meaning: "qo'lga kiritmoq; erishmoq", unit: 29 },
+        { word: "importance", meaning: "ahamiyat", unit: 29 },
+        { word: "knowledge", meaning: "bilim", unit: 29 },
+        { word: "major", meaning: "asosiy; katta", unit: 29 },
+        { word: "mean", meaning: "ma'nosida", unit: 29 },
+        { word: "prefer", meaning: "afzal ko'rmoq", unit: 29 },
+        { word: "president", meaning: "prezident", unit: 29 },
+        { word: "progress", meaning: "taraqqiyot", unit: 29 },
+        { word: "respect", meaning: "hurmat qilmoq; hurmat", unit: 29 },
+        { word: "rich", meaning: "boy", unit: 29 },
+        { word: "skill", meaning: "mahorat; qobiliyat", unit: 29 },
+        { word: "somehow", meaning: "biror yo'l bilan", unit: 29 },
+        { word: "strength", meaning: "kuch; quvvat", unit: 29 },
+        { word: "vote", meaning: "ovoz bermoq", unit: 29 },
+
+        // Unit 30
+        { word: "above", meaning: "ustida; yuqorida", unit: 30 },
+        { word: "ahead", meaning: "oldinda", unit: 30 },
+        { word: "amount", meaning: "miqdor; summa", unit: 30 },
+        { word: "belief", meaning: "ishonch; e'tiqod", unit: 30 },
+        { word: "center", meaning: "markaz", unit: 30 },
+        { word: "common", meaning: "umumiy; keng tarqalgan", unit: 30 },
+        { word: "cost", meaning: "narx; tushum", unit: 30 },
+        { word: "demonstrate", meaning: "ko'rsatmoq", unit: 30 },
+        { word: "different", meaning: "turlicha; boshqa", unit: 30 },
+        { word: "evidence", meaning: "dalil; isbot", unit: 30 },
+        { word: "honesty", meaning: "halollik; rostgo'ylik", unit: 30 },
+        { word: "idiom", meaning: "ibora", unit: 30 },
+        { word: "independent", meaning: "mustaqil; ozod", unit: 30 },
+        { word: "inside", meaning: "ichida; ichki", unit: 30 },
+        { word: "master", meaning: "ustoz; mohir bo'lmoq", unit: 30 },
+        { word: "memory", meaning: "xotira", unit: 30 },
+        { word: "proper", meaning: "to'g'ri; munosib", unit: 30 },
+        { word: "scan", meaning: "tez ko'zdan kechirmoq", unit: 30 },
+        { word: "section", meaning: "bo'lim; qism", unit: 30 },
+        { word: "surface", meaning: "sirt; yuzaki", unit: 30 },
       ];
 
-      // Quiz state
-      let currentQuestionIndex = 0;
-      let score = 0;
-      let userAnswers = [];
-      let questions = [];
-      let streak = 0;
-      let points = 0;
-      let level = 1;
-      let levelProgress = 0;
-      let timeLeft = 60;
-      let timerInterval;
-      let hintsUsed = 0;
+      const generateOptions = (correctMeaning, wordObj) => {
+        const wrongOptions = allWords
+          .filter(
+            (w) => w.meaning !== correctMeaning && w.unit !== wordObj.unit
+          )
+          .sort(() => Math.random() - 0.5)
+          .slice(0, 3)
+          .map((w) => w.meaning);
 
-      // DOM elements
-      const quizContainer = document.getElementById("quizContainer");
-      const scoreContainer = document.getElementById("scoreContainer");
-      const questionNumber = document.getElementById("questionNumber");
-      const totalQuestions = document.getElementById("totalQuestions");
-      const questionElement = document.getElementById("question");
-      const hintElement = document.getElementById("hint");
-      const optionsContainer = document.getElementById("optionsContainer");
-      const prevBtn = document.getElementById("prevBtn");
-      const nextBtn = document.getElementById("nextBtn");
-      const scoreValue = document.getElementById("scoreValue");
-      const scoreMessage = document.getElementById("scoreMessage");
-      const resultsContainer = document.getElementById("resultsContainer");
-      const restartBtn = document.getElementById("restartBtn");
-      const progressBar = document.getElementById("progressBar");
-      const levelProgressBar = document.getElementById("levelProgressBar");
-      const currentLevel = document.getElementById("currentLevel");
-      const streakCount = document.getElementById("streakCount");
-      const levelCount = document.getElementById("levelCount");
-      const pointsCount = document.getElementById("pointsCount");
-      const timer = document.getElementById("timer");
-      const hintBtn = document.getElementById("hintBtn");
-      const difficultyElement = document.getElementById("difficulty");
-      const badge1 = document.getElementById("badge1");
-      const badge2 = document.getElementById("badge2");
-      const badge3 = document.getElementById("badge3");
+        const options = [...wrongOptions, correctMeaning];
+        return options.sort(() => Math.random() - 0.5);
+      };
 
-      // Initialize the quiz
-      function initQuiz() {
-        // Reset state
-        currentQuestionIndex = 0;
-        score = 0;
-        userAnswers = [];
-        streak = 0;
-        points = 0;
-        level = 1;
-        levelProgress = 0;
-        timeLeft = 60;
-        hintsUsed = 0;
+      const EssentialWordsTest = () => {
+        const [studentName, setStudentName] = useState("");
+        const [testStarted, setTestStarted] = useState(false);
+        const [testQuestions, setTestQuestions] = useState([]);
+        const [currentQuestion, setCurrentQuestion] = useState(0);
+        const [selectedAnswer, setSelectedAnswer] = useState(null);
+        const [score, setScore] = useState(0);
+        const [showResult, setShowResult] = useState(false);
+        const [answers, setAnswers] = useState([]);
+        const [loading, setLoading] = useState(false);
+        const [testDate, setTestDate] = useState("");
 
-        // Update UI
-        updateStats();
-        updateTimerDisplay();
-
-        // Generate questions
-        questions = generateQuestions(10);
-
-        // Display first question
-        displayQuestion();
-
-        // Show quiz container, hide score container
-        quizContainer.style.display = "block";
-        scoreContainer.style.display = "none";
-
-        // Start timer
-        startTimer();
-
-        // Update progress bars
-        updateProgressBar();
-        updateLevelProgressBar();
-      }
-
-      // Start the timer
-      function startTimer() {
-        clearInterval(timerInterval);
-        timerInterval = setInterval(() => {
-          timeLeft--;
-          updateTimerDisplay();
-
-          if (timeLeft <= 0) {
-            clearInterval(timerInterval);
-            finishQuiz();
-          }
-        }, 1000);
-      }
-
-      // Update timer display
-      function updateTimerDisplay() {
-        const minutes = Math.floor(timeLeft / 60);
-        const seconds = timeLeft % 60;
-        timer.textContent = `${minutes.toString().padStart(2, "0")}:${seconds
-          .toString()
-          .padStart(2, "0")}`;
-
-        // Change color when time is running out
-        if (timeLeft <= 10) {
-          timer.style.color = "var(--danger)";
-        } else if (timeLeft <= 30) {
-          timer.style.color = "var(--warning)";
-        } else {
-          timer.style.color = "var(--accent)";
-        }
-      }
-
-      // Update stats display
-      function updateStats() {
-        streakCount.textContent = streak;
-        levelCount.textContent = level;
-        pointsCount.textContent = points;
-        currentLevel.textContent = level;
-      }
-
-      // Generate random questions
-      function generateQuestions(numQuestions) {
-        const selectedWords = [];
-        const questions = [];
-
-        // Select random words
-        while (selectedWords.length < numQuestions) {
-          const randomIndex = Math.floor(Math.random() * vocabulary.length);
-          const word = vocabulary[randomIndex];
-
-          if (!selectedWords.includes(word)) {
-            selectedWords.push(word);
-          }
-        }
-
-        // Create questions
-        for (let i = 0; i < selectedWords.length; i++) {
-          const correctWord = selectedWords[i];
-
-          // Generate incorrect options
-          const incorrectOptions = [];
-          while (incorrectOptions.length < 3) {
-            const randomIndex = Math.floor(Math.random() * vocabulary.length);
-            const randomWord = vocabulary[randomIndex];
-
-            if (
-              randomWord !== correctWord &&
-              !incorrectOptions.includes(randomWord.uzbek)
-            ) {
-              incorrectOptions.push(randomWord.uzbek);
-            }
+        const startTest = () => {
+          if (studentName.trim() === "") {
+            alert("Please enter your name!");
+            return;
           }
 
-          // Combine options and shuffle
-          const options = [correctWord.uzbek, ...incorrectOptions];
-          shuffleArray(options);
-
-          questions.push({
-            question: `What is the Uzbek meaning of '${correctWord.english}'?`,
-            options: options,
-            correctAnswer: correctWord.uzbek,
-            userAnswer: null,
-            difficulty: correctWord.difficulty,
-            hint: correctWord.hint,
-            hintUsed: false,
+          setLoading(true);
+          const shuffled = [...allWords]
+            .sort(() => Math.random() - 0.5)
+            .slice(0, 50);
+          const questions = shuffled.map((wordObj) => {
+            const options = generateOptions(wordObj.meaning, wordObj);
+            return {
+              word: wordObj.word,
+              options: options,
+              correct: options.indexOf(wordObj.meaning),
+              unit: wordObj.unit,
+              correctMeaning: wordObj.meaning,
+            };
           });
-        }
+          setTestQuestions(questions);
+          setTestStarted(true);
+          setLoading(false);
+          setTestDate(new Date().toLocaleString());
+        };
 
-        return questions;
-      }
+        const handleAnswer = (index) => {
+          if (selectedAnswer !== null) return;
 
-      // Display current question
-      function displayQuestion() {
-        const currentQuestion = questions[currentQuestionIndex];
+          setSelectedAnswer(index);
+          const isCorrect = index === testQuestions[currentQuestion].correct;
 
-        // Update question number and text
-        questionNumber.textContent = currentQuestionIndex + 1;
-        totalQuestions.textContent = questions.length;
-        questionElement.textContent = currentQuestion.question;
-
-        // Update difficulty
-        difficultyElement.textContent =
-          currentQuestion.difficulty.charAt(0).toUpperCase() +
-          currentQuestion.difficulty.slice(1);
-        difficultyElement.className = `difficulty ${currentQuestion.difficulty}`;
-
-        // Reset hint
-        hintElement.style.display = "none";
-        hintBtn.disabled = false;
-
-        // Clear previous options
-        optionsContainer.innerHTML = "";
-
-        // Create option elements
-        currentQuestion.options.forEach((option) => {
-          const optionElement = document.createElement("div");
-          optionElement.className = "option";
-          if (currentQuestion.userAnswer === option) {
-            optionElement.classList.add("selected");
-          }
-
-          const optionIcon = document.createElement("div");
-          optionIcon.className = "option-icon";
-          optionIcon.innerHTML = '<i class="far fa-circle"></i>';
-
-          const optionText = document.createElement("div");
-          optionText.className = "option-text";
-          optionText.textContent = option;
-
-          optionElement.appendChild(optionIcon);
-          optionElement.appendChild(optionText);
-          optionElement.addEventListener("click", () =>
-            selectOption(option, optionElement)
-          );
-          optionsContainer.appendChild(optionElement);
-        });
-
-        // Update navigation buttons
-        prevBtn.disabled = currentQuestionIndex === 0;
-
-        if (currentQuestionIndex === questions.length - 1) {
-          nextBtn.textContent = "Finish";
-          nextBtn.innerHTML = 'Finish <i class="fas fa-flag-checkered"></i>';
-        } else {
-          nextBtn.textContent = "Next";
-          nextBtn.innerHTML = 'Next <i class="fas fa-arrow-right"></i>';
-        }
-
-        // Update progress bar
-        updateProgressBar();
-      }
-
-      // Select an option
-      function selectOption(option, optionElement) {
-        // Remove selected class from all options
-        document.querySelectorAll(".option").forEach((opt) => {
-          opt.classList.remove("selected");
-        });
-
-        // Add selected class to clicked option
-        optionElement.classList.add("selected");
-
-        // Update option icon
-        const icon = optionElement.querySelector(".option-icon i");
-        icon.className = "fas fa-check-circle";
-
-        // Save user's answer
-        questions[currentQuestionIndex].userAnswer = option;
-        userAnswers[currentQuestionIndex] = option;
-
-        // Automatically proceed to next question after a short delay
-        setTimeout(() => {
-          if (currentQuestionIndex < questions.length - 1) {
-            nextQuestion();
-          } else {
-            // Last question - finish quiz
-            finishQuiz();
-          }
-        }, 800);
-      }
-
-      // Show hint for current question
-      function showHint() {
-        const currentQuestion = questions[currentQuestionIndex];
-        hintElement.textContent = `Hint: ${currentQuestion.hint}`;
-        hintElement.style.display = "block";
-        hintBtn.disabled = true;
-        currentQuestion.hintUsed = true;
-        hintsUsed++;
-
-        // Deduct points for using hint
-        points = Math.max(0, points - 5);
-        updateStats();
-      }
-
-      // Update progress bar
-      function updateProgressBar() {
-        const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
-        progressBar.style.width = `${progress}%`;
-      }
-
-      // Update level progress bar
-      function updateLevelProgressBar() {
-        levelProgressBar.style.width = `${levelProgress}%`;
-      }
-
-      // Navigate to next question
-      function nextQuestion() {
-        if (currentQuestionIndex < questions.length - 1) {
-          currentQuestionIndex++;
-          displayQuestion();
-        } else {
-          // Last question - finish quiz
-          finishQuiz();
-        }
-      }
-
-      // Navigate to previous question
-      function prevQuestion() {
-        if (currentQuestionIndex > 0) {
-          currentQuestionIndex--;
-          displayQuestion();
-        }
-      }
-
-      // Finish quiz and show results
-      function finishQuiz() {
-        clearInterval(timerInterval);
-
-        // Calculate score and update stats
-        score = 0;
-        streak = 0;
-        let currentStreak = 0;
-
-        questions.forEach((question) => {
-          if (question.userAnswer === question.correctAnswer) {
-            score++;
-            currentStreak++;
-
-            // Update streak if current streak is higher
-            if (currentStreak > streak) {
-              streak = currentStreak;
-            }
-
-            // Add points based on difficulty
-            let pointsEarned = 10;
-            if (question.difficulty === "medium") pointsEarned = 15;
-            if (question.difficulty === "hard") pointsEarned = 20;
-
-            // Deduct points if hint was used
-            if (question.hintUsed) {
-              pointsEarned = Math.max(5, pointsEarned - 10);
-            }
-
-            points += pointsEarned;
-          } else {
-            currentStreak = 0;
-          }
-        });
-
-        // Calculate level progress
-        levelProgress = (score / questions.length) * 100;
-
-        // Level up if progress is high enough
-        if (levelProgress >= 80 && level < 5) {
-          level++;
-          levelProgress = 0;
-        }
-
-        // Update stats
-        updateStats();
-        updateLevelProgressBar();
-
-        // Display score
-        scoreValue.textContent = `${score}/${questions.length}`;
-
-        // Set score message
-        let message = "";
-        if (score === questions.length) {
-          message = "Perfect! You're a vocabulary master! 🎉";
-          createConfetti();
-          badge1.classList.add("unlocked");
-          badge2.classList.add("unlocked");
-          badge3.classList.add("unlocked");
-        } else if (score >= questions.length * 0.8) {
-          message = "Excellent! You know most of these words!";
-          badge1.classList.add("unlocked");
-          badge2.classList.add("unlocked");
-        } else if (score >= questions.length * 0.6) {
-          message = "Good job! You're making great progress.";
-          badge1.classList.add("unlocked");
-        } else if (score >= questions.length * 0.4) {
-          message = "Not bad! Keep practicing to improve.";
-        } else {
-          message = "Keep studying! You'll get better with practice.";
-        }
-
-        // Add time bonus if applicable
-        if (timeLeft > 0) {
-          const timeBonus = Math.floor(timeLeft / 2);
-          points += timeBonus;
-          message += ` Time bonus: +${timeBonus} points!`;
-        }
-
-        scoreMessage.textContent = message;
-
-        // Display detailed results
-        resultsContainer.innerHTML = "";
-        questions.forEach((question, index) => {
-          const resultItem = document.createElement("div");
-          resultItem.className = "result-item";
-
-          const isCorrect = question.userAnswer === question.correctAnswer;
           if (isCorrect) {
-            resultItem.classList.add("result-correct");
-          } else {
-            resultItem.classList.add("result-incorrect");
+            setScore(score + 1);
           }
 
-          const resultIcon = document.createElement("div");
-          resultIcon.className = "result-icon";
-          resultIcon.innerHTML = isCorrect
-            ? '<i class="fas fa-check-circle"></i>'
-            : '<i class="fas fa-times-circle"></i>';
+          setAnswers([
+            ...answers,
+            {
+              question: testQuestions[currentQuestion],
+              selected: index,
+              correct: testQuestions[currentQuestion].correct,
+            },
+          ]);
 
-          const resultText = document.createElement("div");
-          resultText.className = "result-text";
-          resultText.innerHTML = `
-                    <strong>Q${index + 1}: ${question.question}</strong><br>
-                    Your answer: ${question.userAnswer || "Not answered"}<br>
-                    Correct answer: ${question.correctAnswer}
-                    ${question.hintUsed ? "<br><small>Hint used</small>" : ""}
+          setTimeout(() => {
+            if (currentQuestion < testQuestions.length - 1) {
+              setCurrentQuestion(currentQuestion + 1);
+              setSelectedAnswer(null);
+            } else {
+              setShowResult(true);
+            }
+          }, 1500);
+        };
+
+        const restartTest = () => {
+          setTestStarted(false);
+          setStudentName("");
+          setCurrentQuestion(0);
+          setSelectedAnswer(null);
+          setScore(0);
+          setShowResult(false);
+          setAnswers([]);
+          setTestQuestions([]);
+        };
+
+        const downloadResults = () => {
+          const percentage = Math.round((score / testQuestions.length) * 100);
+          const resultText = `
+MASH'AL LEARNING CENTER
+Essential Words Test - Results
+
+Student Name: ${studentName}
+Test Date: ${testDate}
+Score: ${score}/${testQuestions.length}
+Percentage: ${percentage}%
+Grade: ${
+            percentage >= 90
+              ? "Excellent"
+              : percentage >= 70
+              ? "Good"
+              : percentage >= 50
+              ? "Fair"
+              : "Needs Improvement"
+          }
+
+Detailed Results:
+${answers
+  .map(
+    (answer, idx) => `
+${idx + 1}. ${answer.question.word} (Unit ${answer.question.unit})
+   Your answer: ${answer.question.options[answer.selected]}
+   ${
+     answer.selected === answer.correct
+       ? "✓ Correct"
+       : `✗ Wrong - Correct answer: ${answer.question.options[answer.correct]}`
+   }
+`
+  )
+  .join("\n")}
                 `;
 
-          resultItem.appendChild(resultIcon);
-          resultItem.appendChild(resultText);
-          resultsContainer.appendChild(resultItem);
-        });
+          const blob = new Blob([resultText], { type: "text/plain" });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = `${studentName}_test_results.txt`;
+          a.click();
+          URL.revokeObjectURL(url);
+        };
 
-        // Show score container, hide quiz container
-        quizContainer.style.display = "none";
-        scoreContainer.style.display = "block";
-      }
+        // Welcome Screen
+        if (!testStarted) {
+          return (
+            <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-4 md:p-6 flex items-center justify-center">
+              <div className="max-w-md w-full">
+                <div className="bg-white rounded-2xl shadow-2xl p-8">
+                  <div className="text-center mb-8">
+                    <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-4 px-6 rounded-xl mb-6">
+                      <h1 className="text-2xl md:text-3xl font-bold">
+                        MASH'AL
+                      </h1>
+                      <p className="text-sm md:text-base opacity-90">
+                        Learning Center
+                      </p>
+                    </div>
+                    <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-2">
+                      Essential Words Test
+                    </h2>
+                    <p className="text-gray-600 text-sm md:text-base">
+                      Book 1 - Units 1-30 (600 words)
+                    </p>
+                  </div>
 
-      // Create confetti effect
-      function createConfetti() {
-        const colors = ["#6C63FF", "#FF6584", "#4ECDC4", "#2ECC71", "#F39C12"];
-        const container = document.querySelector(".container");
+                  <div className="mb-6">
+                    <label className="block text-gray-700 font-semibold mb-2 text-sm md:text-base">
+                      <User className="w-5 h-5 inline mr-2" />
+                      Enter Your Full Name:
+                    </label>
+                    <input
+                      type="text"
+                      value={studentName}
+                      onChange={(e) => setStudentName(e.target.value)}
+                      onKeyPress={(e) => e.key === "Enter" && startTest()}
+                      placeholder="Full name"
+                      className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-indigo-500 focus:outline-none text-base"
+                    />
+                  </div>
 
-        for (let i = 0; i < 100; i++) {
-          const confetti = document.createElement("div");
-          confetti.className = "confetti";
-          confetti.style.left = Math.random() * 100 + "vw";
-          confetti.style.background =
-            colors[Math.floor(Math.random() * colors.length)];
-          confetti.style.width = Math.random() * 10 + 5 + "px";
-          confetti.style.height = confetti.style.width;
-          confetti.style.animationDuration = Math.random() * 3 + 2 + "s";
-          confetti.style.opacity = Math.random() * 0.5 + 0.5;
+                  <div className="bg-indigo-50 border-2 border-indigo-200 rounded-lg p-4 mb-6">
+                    <h3 className="font-semibold text-gray-800 mb-2 text-sm md:text-base">
+                      Test Information:
+                    </h3>
+                    <ul className="text-gray-700 space-y-1 text-xs md:text-sm">
+                      <li>• 50 random questions</li>
+                      <li>• Multiple choice format</li>
+                      <li>• Your results will be saved</li>
+                      <li>• You can download your certificate</li>
+                    </ul>
+                  </div>
 
-          container.appendChild(confetti);
-
-          // Remove confetti after animation completes
-          setTimeout(() => {
-            confetti.remove();
-          }, 5000);
+                  <button
+                    onClick={startTest}
+                    disabled={loading}
+                    className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold py-4 px-6 rounded-lg transition-all shadow-lg text-base md:text-lg"
+                  >
+                    {loading ? "Loading..." : "Start Test"}
+                  </button>
+                </div>
+              </div>
+            </div>
+          );
         }
-      }
 
-      // Utility function to shuffle array
-      function shuffleArray(array) {
-        for (let i = array.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [array[i], array[j]] = [array[j], array[i]];
+        if (showResult) {
+          const percentage = Math.round((score / testQuestions.length) * 100);
+          return (
+            <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4 md:p-6">
+              <div className="max-w-4xl mx-auto">
+                <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8">
+                  {/* Header */}
+                  <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 px-6 rounded-xl mb-6 text-center">
+                    <h1 className="text-xl md:text-2xl font-bold">
+                      MASH'AL Learning Center
+                    </h1>
+                  </div>
+
+                  <div className="text-center mb-8">
+                    <Trophy className="w-16 h-16 md:w-20 md:h-20 text-yellow-500 mx-auto mb-4" />
+                    <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2">
+                      Test Completed!
+                    </h1>
+
+                    <div className="bg-gray-50 rounded-lg p-4 mb-4">
+                      <p className="text-lg font-semibold text-gray-700">
+                        Student: {studentName}
+                      </p>
+                      <p className="text-sm text-gray-600">{testDate}</p>
+                    </div>
+
+                    <div className="text-5xl md:text-6xl font-bold text-indigo-600 my-4">
+                      {score} / {testQuestions.length}
+                    </div>
+                    <p className="text-xl md:text-2xl text-gray-600">
+                      {percentage}% -{" "}
+                      {percentage >= 90
+                        ? "Excellent! 🌟"
+                        : percentage >= 70
+                        ? "Good Job! 👏"
+                        : percentage >= 50
+                        ? "Not Bad! 👍"
+                        : "Keep Practicing! 💪"}
+                    </p>
+                  </div>
+
+                  <div className="mb-6">
+                    <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-4">
+                      Review Your Answers:
+                    </h2>
+                    <div className="space-y-3 max-h-96 overflow-y-auto pr-2">
+                      {answers.map((answer, idx) => (
+                        <div
+                          key={idx}
+                          className={`p-4 rounded-lg ${
+                            answer.selected === answer.correct
+                              ? "bg-green-50 border-2 border-green-300"
+                              : "bg-red-50 border-2 border-red-300"
+                          }`}
+                        >
+                          <div className="flex items-start gap-3">
+                            {answer.selected === answer.correct ? (
+                              <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" />
+                            ) : (
+                              <XCircle className="w-6 h-6 text-red-600 flex-shrink-0 mt-1" />
+                            )}
+                            <div className="flex-grow">
+                              <p className="font-semibold text-gray-800 text-base md:text-lg">
+                                {idx + 1}. {answer.question.word}
+                              </p>
+                              <p className="text-sm text-gray-600 mb-1">
+                                Unit {answer.question.unit}
+                              </p>
+                              {answer.selected !== answer.correct && (
+                                <div className="mt-2">
+                                  <p className="text-red-600 text-sm">
+                                    ❌ Your answer:{" "}
+                                    {answer.question.options[answer.selected]}
+                                  </p>
+                                  <p className="text-green-600 text-sm">
+                                    ✅ Correct answer:{" "}
+                                    {answer.question.options[answer.correct]}
+                                  </p>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <button
+                      onClick={downloadResults}
+                      className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-4 px-6 rounded-lg transition-colors flex items-center justify-center gap-2 text-base md:text-lg shadow-lg"
+                    >
+                      <Download className="w-6 h-6" />
+                      Download Results
+                    </button>
+                    <button
+                      onClick={restartTest}
+                      className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-4 px-6 rounded-lg transition-colors flex items-center justify-center gap-2 text-base md:text-lg shadow-lg"
+                    >
+                      <RotateCcw className="w-6 h-6" />
+                      New Test
+                    </button>
+                  </div>
+
+                  <div className="mt-6 text-center text-sm text-gray-600 bg-gray-50 rounded-lg p-3">
+                    <p className="font-semibold">
+                      Your teacher can see your results in the downloaded file
+                    </p>
+                    <p className="text-xs mt-1">
+                      Send the file to your teacher or save it for your records
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
         }
-        return array;
-      }
 
-      // Event listeners
-      nextBtn.addEventListener("click", nextQuestion);
-      prevBtn.addEventListener("click", prevQuestion);
-      restartBtn.addEventListener("click", initQuiz);
-      hintBtn.addEventListener("click", showHint);
+        const question = testQuestions[currentQuestion];
+        const progress = ((currentQuestion + 1) / testQuestions.length) * 100;
 
-      // Initialize the quiz when page loads
-      window.addEventListener("load", initQuiz);
+        return (
+          <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4 md:p-6">
+            <div className="max-w-3xl mx-auto">
+              {/* Header */}
+              <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 px-6 rounded-xl mb-4 text-center shadow-lg">
+                <h1 className="text-lg md:text-xl font-bold">
+                  MASH'AL Learning Center
+                </h1>
+                <p className="text-xs md:text-sm opacity-90">
+                  Student: {studentName}
+                </p>
+              </div>
+
+              <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8">
+                <div className="mb-6">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-xs md:text-sm font-semibold text-gray-600">
+                      Question {currentQuestion + 1} of {testQuestions.length}
+                    </span>
+                    <span className="text-xs md:text-sm font-semibold text-indigo-600">
+                      Score: {score}
+                    </span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                    <div
+                      className="bg-indigo-600 h-3 rounded-full transition-all duration-300"
+                      style={{ width: `${progress}%` }}
+                    />
+                  </div>
+                </div>
+
+                <div className="mb-8">
+                  <p className="text-sm text-gray-500 mb-2">
+                    Unit {question.unit}
+                  </p>
+                  <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4">
+                    What is the meaning of:
+                  </h2>
+                  <div className="bg-indigo-50 border-2 border-indigo-200 rounded-xl p-6">
+                    <p className="text-3xl md:text-4xl font-bold text-indigo-700 text-center break-words">
+                      {question.word}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  {question.options.map((option, index) => {
+                    let buttonClass =
+                      "w-full p-4 text-left text-base md:text-lg font-medium rounded-lg border-2 transition-all cursor-pointer ";
+
+                    if (selectedAnswer === null) {
+                      buttonClass +=
+                        "border-gray-300 hover:border-indigo-400 hover:bg-indigo-50 bg-white hover:shadow-md";
+                    } else if (index === question.correct) {
+                      buttonClass +=
+                        "border-green-500 bg-green-50 text-green-800";
+                    } else if (index === selectedAnswer) {
+                      buttonClass += "border-red-500 bg-red-50 text-red-800";
+                    } else {
+                      buttonClass += "border-gray-200 bg-gray-50 text-gray-500";
+                    }
+
+                    return (
+                      <button
+                        key={index}
+                        onClick={() => handleAnswer(index)}
+                        disabled={selectedAnswer !== null}
+                        className={buttonClass}
+                      >
+                        <div className="flex items-center gap-3">
+                          <span className="w-8 h-8 flex items-center justify-center bg-gray-200 rounded-full font-bold text-gray-700 flex-shrink-0 text-sm">
+                            {String.fromCharCode(65 + index)}
+                          </span>
+                          <span className="flex-grow break-words">
+                            {option}
+                          </span>
+                          {selectedAnswer !== null &&
+                            index === question.correct && (
+                              <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0" />
+                            )}
+                          {selectedAnswer === index &&
+                            index !== question.correct && (
+                              <XCircle className="w-6 h-6 text-red-600 flex-shrink-0" />
+                            )}
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="mt-4 text-center text-sm text-gray-600 bg-white rounded-lg p-3">
+                📚 Testing 50 random words from 600 total words (Book 1, Units
+                1-30)
+              </div>
+            </div>
+          </div>
+        );
+      };
+
+      ReactDOM.render(
+        React.createElement(EssentialWordsTest),
+        document.getElementById("root")
+      );
     </script>
   </body>
 </html>
